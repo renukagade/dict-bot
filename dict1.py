@@ -60,25 +60,34 @@ def get_synonyms_antonyms(data):
 
 
 
-# Set Google Cloud credentials environment variable
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "path/to/your/credentials.json"
-
-def translate_text(text, target):
+def recognize_speech():
+    r = sr.Recognizer()
     try:
-        translate_client = translate.Client()
-        result = translate_client.translate(text, target_language=target)
-        return result['translatedText']
+        with sr.Microphone() as source:
+            st.write("Say something!")
+            audio = r.listen(source)
+            word = r.recognize_google(audio)
+            return word
+    except Exception as e:
+        st.error(f"Speech recognition error: {e}")
+        return None
+
+def translate_text(text, dest_lang):
+    try:
+        translator = Translator()
+        translation = translator.translate(text, dest=dest_lang)
+        return translation.text
     except Exception as e:
         st.error(f"Translation error: {e}")
         return None
 
-st.title("Language Translator")
+st.title("Speech to Text Translator")
 
-text = st.text_input("Enter text to translate:")
-dest_lang = st.selectbox("Translate to language:", ["es", "fr", "de", "zh-cn", "hi"])
-
-if text:
-    translated_text = translate_text(text, dest_lang)
+word = recognize_speech()
+if word:
+    st.write(f"Recognized word: {word}")
+    dest_lang = st.selectbox("Translate to language:", ["es", "fr", "de", "zh-cn", "hi"])
+    translated_text = translate_text(word, dest_lang)
     if translated_text:
         st.write(f"Translated text: {translated_text}")
 
