@@ -3,6 +3,7 @@ import requests
 import speech_recognition as sr
 import pyttsx3
 from googletrans import Translator
+import os
 
 BASE_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
