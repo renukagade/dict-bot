@@ -1,9 +1,11 @@
-
 import streamlit as st
 import requests
 import speech_recognition as sr
 import pyttsx3
-from googletrans import Translator
+from googletrans import Translator, LANGUAGES
+from google.cloud import translate_v2 as translate
+import os
+
 
 BASE_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
@@ -54,10 +56,31 @@ def get_synonyms_antonyms(data):
                     antonyms.extend(definition['antonyms'])
     return synonyms, antonyms
 
-def translate_text(text, dest_lang):
-    translator = Translator()
-    translation = translator.translate(text, dest=dest_lang)
-    return translation.text
+
+
+
+
+# Set Google Cloud credentials environment variable
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "path/to/your/credentials.json"
+
+def translate_text(text, target):
+    try:
+        translate_client = translate.Client()
+        result = translate_client.translate(text, target_language=target)
+        return result['translatedText']
+    except Exception as e:
+        st.error(f"Translation error: {e}")
+        return None
+
+st.title("Language Translator")
+
+text = st.text_input("Enter text to translate:")
+dest_lang = st.selectbox("Translate to language:", ["es", "fr", "de", "zh-cn", "hi"])
+
+if text:
+    translated_text = translate_text(text, dest_lang)
+    if translated_text:
+        st.write(f"Translated text: {translated_text}")
 
 def recognize_speech():
     recognizer = sr.Recognizer()
