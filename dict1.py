@@ -2,12 +2,7 @@ import streamlit as st
 import requests
 import speech_recognition as sr
 import pyttsx3
-import pyaudio
-from googletrans import Translator, LANGUAGES
-from google.cloud import translate_v2 as translate
-import os
-
-
+from googletrans import Translator
 
 BASE_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
