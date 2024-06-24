@@ -1,3 +1,4 @@
+pip install --upgrade pip
 import streamlit as st
 import requests
 import speech_recognition as sr
