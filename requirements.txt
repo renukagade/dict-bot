@@ -2,4 +2,5 @@ streamlit
 requests
 SpeechRecognition
 pyttsx3
-googletrans 
+googletrans==4.0.0-rc1
+
